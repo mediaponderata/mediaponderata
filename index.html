@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<head>
+    <style type="text/css">
+        body {
+            background-color: #121212;
+            color: #e0e0e0; 
+            font-family: 'Arial', sans-serif; 
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            height: 100%;
+            text-align: center;
+        }
+
+        #title {
+            background: linear-gradient(90deg, #e74c3c, #f39c12);
+            -webkit-background-clip: text;
+            background-clip: text; 
+            color: transparent; 
+            font-size: 2em; 
+            font-weight: bold; 
+            text-align: center; 
+        }
+
+        #title h1{
+            font-size: 2em;
+        }
+        .container {
+         display: flex;
+         justify-content: center; 
+         height: 100vh; 
+     }
+
+     .container > div {
+        width:90%;
+    }
+
+    #form-container {
+        background: linear-gradient(to bottom left, #2c2c2c, #000000);
+        padding: 3em;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        border: 1.5px solid #ffffff;
+        border-radius: 8px;
+    }
+
+    #form-container p {
+        margin:0;
+        margin-bottom: 5px;
+        font-size: 1.3em;
+    }
+    #exams-form input {
+        padding: 0.3em;
+        text-align: center;
+        font-size: 1.6em;
+        margin: 0.1em;
+        border-radius: 5px;
+        border: none;
+        background-color: darkgray;
+    }
+
+    .examGrade, .examWeight {
+        width: 4em;
+    }
+
+    .deleteButton {
+        background-color: #e74c3c; 
+        color: white; 
+        border: none; 
+        padding: 10px 20px; 
+        border-radius: 5px; 
+        font-size: 16px;
+        font-weight: bold; 
+        cursor: pointer; 
+        transition: background-color 0.3s ease;
+        margin: 5px;
+    }
+
+    .deleteButton:hover {
+        background-color: #c0392b; 
+    }
+
+    .deleteButton:focus {
+        outline: none; /
+        box-shadow: 0 0 5px rgba(231, 76, 60, 0.5); 
+    }
+
+    .deleteButton:active {
+        background-color: #a93226; 
+    }
+
+
+    #addExam {
+        background-color: green; 
+        color: white; 
+        border: none; 
+        padding: 10px 20px; 
+        border-radius: 5px; 
+        font-size: 16px;
+        font-weight: bold; 
+        cursor: pointer; 
+        transition: background-color 0.3s ease;
+        margin: 5px;
+    }
+
+    #results {
+        background: linear-gradient(90deg, #e74c3c, #f39c12); 
+        padding: 15px; 
+        border-radius: 10px; 
+        color: white; 
+        text-align: center; 
+    }
+
+
+    #results h1, h2 {
+        padding: 0;
+        margin: 0;
+    }
+
+
+    .examRow {
+        display: inline;
+    }
+
+    .info-container {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap; 
+    }
+    .info-box {
+        background: linear-gradient(to bottom left, #2c2c2c, #000000);
+        border: 1.5px solid #ffffff;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 10px;
+        flex: 1 1 30%; 
+        min-width: 250px; 
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    @media (max-width: 768px) {
+        .info-box {
+            flex: 1 1 100%; 
+        }
+    }
+
+
+    footer {
+        background: #2c2c2c;
+        color: #D3D3D3;
+        padding: 0.2em;
+        font-size: 1.1em;
+    }
+
+
+
+</style>
+
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Media ponderata</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+<body>
+
+    <div class="container">
+        <div>
+            <div id="title">
+                <h1>Media ponderata per l'università</h1>
+            </div>
+            <div id="form-container">
+                <p>Inserisci i dati relativi ai tuoi esami e ottieni il risultato in basso.</p>
+                <div id="grade-form-container">
+                   <form id="exams-form">
+
+                   </form>
+               </div>
+               <button id="addExam">Aggiungi esame</button>
+           </div>
+           <div id="results">
+            <h1>RISULTATI</h1>
+            <div class="show-results">
+                <h2><label id="weighted-mean"></label></h2>
+                <h2><label id="arithmetic-mean"></label></h2>
+                <h2><label id="weights-sum"></label></h2>
+                <h2><label id="final-grade"></label></h2>
+            </div>
+        </div>
+
+        <div class="info-container">
+            <div class="info-box">
+                <h2>Media aritmetica</h2>
+                <p>La media aritmetica viene calcolata sommando tutti i voti e dividendo per il numero di voti</p>
+                <p>
+                    $$\text{Media} = \frac{x_1 + x_2 + \ldots + x_n}{n}$$
+                </p>
+                con \(x_i\) voto i-esimo.
+            </div>
+            <div class="info-box">
+                <h2>Media Ponderata</h2>
+                <p>La media ponderata tiene conto dell'importanza di ciascun valore.</p>
+                <p>
+                    $$\text{Media Ponderata} = \frac{w_1x_1 + w_2x_2 + \ldots + w_nx_n}{w_1 + w_2 + \ldots + w_n}$$
+                </p>
+            </div>
+            <div class="info-box">
+                <h2>Voti di laurea</h2>
+                <p>Il voto di laurea viene calcolato convertendo in centodecimi la media ponderata dei voti degli esami</p>
+                <p>
+                    $$\text{Voto di laurea} = \text{Media ponderata}\cdot\frac{110}{30}$$
+                </p>
+            </div>
+        </div>
+
+
+
+        <footer>
+            I dati sono processati localmente sul tuo dispositivo.
+        </footer>
+    </div>
+</div>
+
+
+
+
+
+<script>
+
+    $(document).ready(() => $("#results").hide())
+
+
+    let exams = []
+    function addExam(num) {
+
+        for (i = 0; i < num; i++) {
+            var newExam = '<div class="examRow"><input class="examName" type="text" placeholder="Esame"><input class="examGrade" type="number" placeholder="Voto"><input class="examWeight" type="number" placeholder="Crediti"><button class="deleteButton">Elimina</button><div>'
+            $("#exams-form").append(newExam);
+            exams.push({examName: ''})
+        }
+    }
+
+    function setResults() {
+
+        gradesSum = 0;
+        gradesNum = 0;
+        numerator_weighted_sum = 0;
+        weights_sum = 0;
+
+        for (i = 0; i < exams.length; i++) {
+            examObj = exams[i];
+            grade = examObj.examGrade;
+            weight = examObj.examWeight;
+
+            if (grade != null && weight > 0) {
+                numerator_weighted_sum += grade * weight;
+                weights_sum += weight;
+                gradesSum += grade
+                gradesNum++;
+            }
+
+        }
+
+        weighted_mean = numerator_weighted_sum / weights_sum;
+        arithmetic_mean = gradesSum / gradesNum;
+        final_grade = weighted_mean*11/3;
+
+        if (!weighted_mean || !arithmetic_mean) {
+            $("#results").hide()
+        } else {
+            $("#weighted-mean").text("Media ponderata: " + weighted_mean + "/30");
+            $("#arithmetic-mean").text("Media aritmetica: " + arithmetic_mean + "/30");
+            $("#weights-sum").text("Crediti conseguiti: " + weights_sum + "/110")
+            $("#final-grade").text("Voto di base laurea: " + final_grade + "/110")
+            $("#results").show()
+        }
+
+    }
+
+
+    $(document).ready(function() {
+        addExam(3);
+        $("#addExam").click(() => addExam(1));
+    });
+
+
+    $(document).on("click", ".deleteButton", function() {
+        exams.splice($(this).parent().index(), 1)
+        $(this).parent().remove();
+        setResults();
+    });
+
+    $(document).on('input', '#exams-form input', function() {
+
+        valueIndex = $(this).index();
+        examIndex = $(this).parent().index();
+        examObj = exams[examIndex];
+        inputValue = $(this).val()
+
+    if (valueIndex == 0){ //Exam name
+        examObj.examName = inputValue;
+    } else if (valueIndex == 1){ //Exam grade
+        examObj.examGrade = Number(inputValue);
+    } else if (valueIndex == 2){ //Exam weight
+        examObj.examWeight = Number(inputValue);
+    }
+
+    setResults()  
+});
+
+</script>
+
+</body>
+</html>
