@@ -4,6 +4,7 @@
 
 <head>
     <style type="text/css">
+
         body {
             background-color: #121212;
             color: #e0e0e0; 
@@ -26,12 +27,14 @@
         }
 
         #title h1{
-            font-size: 2em;
+            font-size: 1.8em;
         }
         .container {
          display: flex;
          justify-content: center; 
-         height: 100vh; 
+         height: 100vh;
+         width: 100%; 
+
      }
 
      .container > div {
@@ -55,22 +58,28 @@
     #exams-form input {
         padding: 0.3em;
         text-align: center;
-        font-size: 1.6em;
+        font-size: 1.4em;
         margin: 0.1em;
         border-radius: 5px;
-        border: none;
-        background-color: darkgray;
+        border: 0.3px solid #ffffff;
+        background-color: #000000;
+        color: #ffffff;
     }
 
     .examGrade, .examWeight {
-        width: 4em;
+        width: 18%;
+    }
+
+    .examName {
+        width: 40%;
     }
 
     .deleteButton {
+        width: 6%;
         background-color: #e74c3c; 
         color: white; 
         border: none; 
-        padding: 10px 20px; 
+        padding: 10px; 
         border-radius: 5px; 
         font-size: 16px;
         font-weight: bold; 
@@ -106,6 +115,7 @@
         margin: 5px;
     }
 
+
     #results {
         background: linear-gradient(90deg, #e74c3c, #f39c12); 
         padding: 15px; 
@@ -118,6 +128,12 @@
     #results h1, h2 {
         padding: 0;
         margin: 0;
+    }
+
+    #results h2 {
+        font-size: 1.4em;
+        border-radius: 2px;
+        border-bottom: 0.2px solid #ffffff;
     }
 
 
@@ -146,7 +162,6 @@
         }
     }
 
-
     footer {
         background: #2c2c2c;
         color: #D3D3D3;
@@ -154,6 +169,33 @@
         font-size: 1.1em;
     }
 
+
+        @media (max-width: 767px) {
+            #title h1 {
+                font-size: 1em;
+            }
+
+        .container > div {
+            width:100%;
+        }
+
+        #form-container {
+            padding: 0;
+        }
+
+        #exams-form input {
+            font-size: 1em;
+            padding: 4px;
+        }
+
+        .deleteButton {
+            font-size: 1em;
+            padding: 2px;
+        }
+        #info-container {
+            display: block;
+        }
+        }
 
 
 </style>
@@ -195,23 +237,25 @@
                 <h2>Media aritmetica</h2>
                 <p>La media aritmetica viene calcolata sommando tutti i voti e dividendo per il numero di voti</p>
                 <p>
-                    $$\text{Media} = \frac{x_1 + x_2 + \ldots + x_n}{n}$$
+                    $$\frac{\sum_i x_i}{N}$$
                 </p>
-                con \(x_i\) voto i-esimo.
+                con \(x_i\) voto \(i\)-esimo.
             </div>
             <div class="info-box">
                 <h2>Media Ponderata</h2>
-                <p>La media ponderata tiene conto dell'importanza di ciascun valore.</p>
+                <p>La media ponderata viene calcolata sommando i prodotti di ogni voto per i relativi crediti e dividendo per la somma dei crediti. </p>
                 <p>
-                    $$\text{Media Ponderata} = \frac{w_1x_1 + w_2x_2 + \ldots + w_nx_n}{w_1 + w_2 + \ldots + w_n}$$
+                    $$\frac{\sum_i c_ix_i}{\sum_i c_i}$$
                 </p>
+                con \(c_i\) numero di crediti relativi al voto \(x_i\).
             </div>
             <div class="info-box">
-                <h2>Voti di laurea</h2>
-                <p>Il voto di laurea viene calcolato convertendo in centodecimi la media ponderata dei voti degli esami</p>
+                <h2>Voto di laurea</h2>
+                <p>Il voto di laurea viene calcolato convertendo in centodecimi la media ponderata dei voti degli esami.</p>
                 <p>
-                    $$\text{Voto di laurea} = \text{Media ponderata}\cdot\frac{110}{30}$$
+                    $$\text{Media ponderata}\cdot\frac{110}{30}$$
                 </p>
+                <i>Normalmente questo è il metodo con cui viene calcolato il voto di partenza. Spesso sono previsti altri punti per la tesi o se sono rispettati altri requisiti. Cerca le informazioni relative al tuo corso di laurea per maggiori informazioni.</i>
             </div>
         </div>
 
@@ -219,6 +263,7 @@
 
         <footer>
             I dati sono processati localmente sul tuo dispositivo.
+            <br>Non si escludono errori nella realizzazione del sito. Verifica personalmente i risultati.
         </footer>
     </div>
 </div>
@@ -229,14 +274,19 @@
 
 <script>
 
-    $(document).ready(() => $("#results").hide())
+    $(document).ready(() => {
+        $("#results").hide();}
+        )
+
+
+
 
 
     let exams = []
     function addExam(num) {
 
         for (i = 0; i < num; i++) {
-            var newExam = '<div class="examRow"><input class="examName" type="text" placeholder="Esame"><input class="examGrade" type="number" placeholder="Voto"><input class="examWeight" type="number" placeholder="Crediti"><button class="deleteButton">Elimina</button><div>'
+            var newExam = '<div class="examRow"><input class="examName" type="text" placeholder="Esame"><input class="examGrade" type="number" placeholder="Voto"><input class="examWeight" type="number" placeholder="Crediti"><button class="deleteButton">X</button><div>'
             $("#exams-form").append(newExam);
             exams.push({examName: ''})
         }
@@ -272,7 +322,7 @@
         } else {
             $("#weighted-mean").text("Media ponderata: " + weighted_mean + "/30");
             $("#arithmetic-mean").text("Media aritmetica: " + arithmetic_mean + "/30");
-            $("#weights-sum").text("Crediti conseguiti: " + weights_sum + "/110")
+            $("#weights-sum").text("Crediti conseguiti: " + weights_sum + "")
             $("#final-grade").text("Voto di base laurea: " + final_grade + "/110")
             $("#results").show()
         }
